@@ -44,7 +44,6 @@ module.exports = {
     },
     messages: async (obj, args,  { dataSources }) => {
       const { MessageModel } = dataSources;
-      console.log('object', obj);
       return MessageModel.getMessagesByChat(obj._id);
     },
   },

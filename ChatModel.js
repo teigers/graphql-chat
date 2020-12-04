@@ -31,10 +31,7 @@ module.exports = class {
   }
 
   async addMessage(chatId, messageId) {
-    const filter = {
-      _id: new ObjectId(chatId)
-    };
-    const chat = await this.collection.findOne(filter)    
+    const chat = await this.getChatById(chatId);
     chat.messages = [...chat.messages, messageId];
 
     const update = { 
