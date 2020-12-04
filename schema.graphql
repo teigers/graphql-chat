@@ -1,0 +1,37 @@
+type Query { 
+  user(id: ID!): User
+
+  users: [User]!
+}
+
+type Mutation {
+  createUser(userName: String!): User!
+
+  createChat(participants: [ID!]!): ID!
+
+  sendMessage(chatId: ID! input: MessageInput!): Message!
+}
+
+type User {
+  id: ID!
+  userName: String!
+  chats: [Chat]!
+}
+
+type Chat {
+  id: ID!
+  participants: [User!]!
+  messages: [Message]!
+}
+
+type Message {
+  id: ID!
+  from: User! 
+  created: String!
+  message: String! 
+}
+
+input MessageInput {
+  from: ID!
+  message: String!
+}
