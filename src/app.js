@@ -1,31 +1,37 @@
 const { ApolloServer, gql } = require('apollo-server');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const { connectMongoDb } = require('./datasources/MongoDb');
+const Users = require('./datasources/Users');
+const Chats = require('./datasources/Chats');
+const Messages = require('./datasources/Messages');
 const resolvers = require('./resolvers');
-const dbClient = require('./dbClient');
-const UserModel = require('./UserModel');
-const ChatModel = require('./ChatModel');
-const MessageModel = require('./MessageModel');
 
 dotenv.config();
 
 const typeDefs = gql(`${fs.readFileSync('./schema.graphql')}`);
 
+let database; 
+
 const server = new ApolloServer({
     typeDefs,
     resolvers,
     dataSources: () => ({
-      UserModel: new UserModel(),
-      ChatModel: new ChatModel(),
-      MessageModel: new MessageModel(),
+      Users: new Users(database),
+      Chats: new Chats(database),
+      Messages: new Messages(database),
     }),
 });
 
 const port = process.env.PORT || 4000;
 
 const bootStrap = async () => {
-  await dbClient.connect();
-  console.log('Connected to database');
+  database = await connectMongoDb(
+    process.env.CONNECTION_STRING, 
+    process.env.DATABASE,
+    { useUnifiedTopology: true },
+  );
+  console.log('Connected to chat database');
   server.listen({ port }).then(({ url }) => {
     console.log(`Server listening at ${url}`);
   });
