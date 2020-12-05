@@ -1,15 +1,28 @@
+const { PubSub } = require('apollo-server');
+
+const pubSub = new PubSub();
+
 module.exports = {
   Query: {
     user: async (_,  { id }, { dataSources: { Users } }) => Users.getById(id),
     users: async (_,  args, { dataSources: { Users } }) => Users.getAll(),
+    chat: async (_, { chatId },  { dataSources: { Chats } }) => Chats.getById(chatId),
   },
 
   Mutation: {
     createUser: async (_, { userName },  { dataSources: { Users } }) => Users.create(userName),
     createChat: async (_, { participants },  { dataSources: { Chats } }) => Chats.create(participants),
-    sendMessage: async (_, { chatId, input },  { dataSources: { Messages } }) => (
-      Messages.create(chatId, input)
-    ),
+    sendMessage: async (_, { chatId, input },  { dataSources: { Messages } }) => {
+      const message = await Messages.create(chatId, input)
+      pubSub.publish(chatId, { messageFeed: message });
+      return message;
+    },
+  },
+
+  Subscription: {  
+    messageFeed: {
+      subscribe: (_, { chatId }) => pubSub.asyncIterator(chatId),
+    },
   },
 
   User: {
@@ -25,7 +38,7 @@ module.exports = {
 
   Message: {
     id: obj => obj._id,
-    from: async (obj,  args, { dataSources: { Users } }) => Users.getById(obj.from),
+    fromId: obj => obj.from,
     created: obj => new Date(obj.created).toISOString(),
   }
 };

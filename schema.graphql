@@ -2,14 +2,20 @@ type Query {
   user(id: ID!): User
 
   users: [User]!
+
+  chat(chatId: ID!): Chat
 }
 
 type Mutation {
   createUser(userName: String!): User!
 
-  createChat(participants: [ID!]!): ID!
+  createChat(participants: [ID!]!): Chat!
 
   sendMessage(chatId: ID! input: MessageInput!): Message!
+}
+
+type Subscription {
+  messageFeed(chatId: ID!): Message!
 }
 
 type User {
@@ -26,9 +32,18 @@ type Chat {
 
 type Message {
   id: ID!
-  from: User! 
   created: String!
   message: String! 
+
+  """ 
+    Ideally the two fields below would return the types User and Chat, but subscriptions
+    doesnt't currently support data sources without 'hacking'.
+    
+    https://github.com/apollographql/apollo-server/issues/1526
+  """
+  fromId: ID!
+  chat: Chat!
+
 }
 
 input MessageInput {

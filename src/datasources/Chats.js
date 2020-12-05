@@ -14,7 +14,7 @@ module.exports = class Chats extends MongoDb {
     };
     const res = await this.insertOne(input)
     const { ops } = res;     
-    return ops[0]._id;
+    return ops[0];
   }
 
   async getByUser(userId) {

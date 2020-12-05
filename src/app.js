@@ -14,13 +14,13 @@ const typeDefs = gql(`${fs.readFileSync('./schema.graphql')}`);
 let database; 
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    dataSources: () => ({
-      Users: new Users(database),
-      Chats: new Chats(database),
-      Messages: new Messages(database),
-    }),
+  typeDefs,
+  resolvers,   
+  dataSources: () => ({
+    Users: new Users(database),
+    Chats: new Chats(database),
+    Messages: new Messages(database),
+  }),
 });
 
 const port = process.env.PORT || 4000;
@@ -31,9 +31,10 @@ const bootStrap = async () => {
     process.env.DATABASE,
     { useUnifiedTopology: true },
   );
-  console.log('Connected to chat database');
-  server.listen({ port }).then(({ url }) => {
-    console.log(`Server listening at ${url}`);
+  console.log('Connected to database');
+  server.listen({ port }).then(({ url, subscriptionsUrl }) => {
+    console.log(`server listening at ${url}`);
+    console.log(`subscription listening at ${subscriptionsUrl}`);
   });
 };
 
