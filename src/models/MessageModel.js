@@ -45,9 +45,9 @@ module.exports = class extends BaseModel {
 
     const storedMessage = await this.Messages.create(chatId, input);
     
-    return {
-      ...storedMessage,
-      participants,
+    return { 
+      message: storedMessage, 
+      receivers: participants 
     };
   }
 }
