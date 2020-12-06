@@ -4,5 +4,5 @@ An apollo server based chat service, using the graphql subscription to notify us
 
 MongoDb is used for storage and the following env variables need to be set:
 
-> CONNECTION_STRING
+> CONNECTION_STRING <br>
 > DATABASE
