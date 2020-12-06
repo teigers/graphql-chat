@@ -44,10 +44,12 @@ module.exports = class extends BaseModel {
     }
 
     const storedMessage = await this.Messages.create(chatId, input);
+
+    const receivers = participants.filter(id => id !== from);
     
     return { 
       message: storedMessage, 
-      receivers: participants 
+      receivers,
     };
   }
 }
