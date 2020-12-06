@@ -1,8 +1,6 @@
-const { PubSub, withFilter } = require('apollo-server');
+const { PubSub } = require('apollo-server');
 
 const pubSub = new PubSub();
-
-// TODO: Wrap pubSub and filter logic in a class.
 
 module.exports = {
   Query: {
@@ -16,20 +14,16 @@ module.exports = {
     createChat: async (_, { participants },  { dataSources: { ChatModel } }) => ChatModel.create(participants),
     sendMessage: async (_, { chatId, input },  { dataSources: { MessageModel } }) => {
       const message = await MessageModel.create(chatId, input);
-      pubSub.publish('messagePublished', { messageFeed: message });
+      for (const participantId of message.participants) {
+        pubSub.publish(participantId, { messageFeed: message });
+      }
       return message;
     },
   },
 
   Subscription: {  
     messageFeed: {
-      subscribe: withFilter(
-          () => pubSub.asyncIterator('messagePublished'),
-          (payload, { userId }) => {
-            const { messageFeed: { participants }} = payload;
-            return participants.includes(userId);
-          }
-        ),
+      subscribe: (_, { userId }) => pubSub.asyncIterator(userId),
     },
   },
 
