@@ -6,11 +6,13 @@ module.exports = class Chats extends MongoDb {
     super(database, 'chats');
   }
 
-  async create(participantIds) {
-    const ids = participantIds.map(id => new ObjectId(id));
-    const input = { 
+  async create({ participants, title }) {
+    const ids = participants.map(id => new ObjectId(id));
+    const input = {
+      title, 
       participants: ids, 
-      messages: [] 
+      messages: [],
+      created: new Date(),
     };
     const res = await this.insertOne(input)
     const { ops } = res;     

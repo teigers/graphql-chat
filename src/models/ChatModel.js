@@ -18,21 +18,27 @@ module.exports = class extends BaseModel {
     return this.Chats.getByUser(userId);
   }
 
-  async create(participantIds) {
-    if (!(participantIds && participantIds.length)) {
+  async create(input) {
+    const { participants, title } = input;
+
+    if(!title) {
+      throw new UserInputError('No title provided');
+    }
+
+    if (!(participants && participants.length)) {
       throw new UserInputError('No participants provided');
     }
 
-    if (participantIds.length < 2) {
+    if (participants.length < 2) {
       throw new UserInputError('A chat must have 2 or more participants');
     }
 
-    const participants = await this.Users.getMany(participantIds);
+    const storedParticipants = await this.Users.getMany(participants);
 
-    if (participants.length !== participantIds.length) {
+    if (participants.length !== storedParticipants.length) {
       throw new UserInputError('Invalid participant id');
     }
 
-    return this.Chats.create(participantIds);
+    return this.Chats.create({ participants, title });
   }
 }

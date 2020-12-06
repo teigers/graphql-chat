@@ -9,7 +9,7 @@ type Query {
 type Mutation {
   createUser(userName: String!): User!
 
-  createChat(participants: [ID!]!): Chat!
+  createChat(input: ChatInput!): Chat!
 
   sendMessage(chatId: ID! input: MessageInput!): Message!
 }
@@ -26,8 +26,10 @@ type User {
 
 type Chat {
   id: ID!
+  title: String!  
   participants: [User!]!
   messages: [Message]!
+  created: String!
 }
 
 type Message {
@@ -49,4 +51,9 @@ type Message {
 input MessageInput {
   from: ID!
   message: String!
+}
+
+input ChatInput {
+  title: String!
+  participants: [ID!]!
 }

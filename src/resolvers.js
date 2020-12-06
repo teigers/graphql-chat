@@ -11,7 +11,7 @@ module.exports = {
 
   Mutation: {
     createUser: async (_, { userName },  { dataSources: { UserModel } }) => UserModel.create(userName),
-    createChat: async (_, { participants },  { dataSources: { ChatModel } }) => ChatModel.create(participants),
+    createChat: async (_, { input },  { dataSources: { ChatModel } }) => ChatModel.create(input),
     sendMessage: async (_, { chatId, input },  { dataSources: { MessageModel } }) => {
       const message = await MessageModel.create(chatId, input);
       for (const participantId of message.participants) {
@@ -36,6 +36,7 @@ module.exports = {
     id: obj => obj._id,    
     participants: async (obj, args,  { dataSources: { UserModel } }) => UserModel.getMany(obj.participants),
     messages: async (obj, args,  { dataSources: { MessageModel } }) => MessageModel.getByChat(obj._id),
+    created: obj => new Date(obj.created).toISOString(),
   },
 
   Message: {

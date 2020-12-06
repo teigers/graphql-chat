@@ -38,15 +38,15 @@ module.exports = class extends BaseModel {
     }
 
     const participants = chat.participants.map(id => id.toString());
-    
+
     if (!participants.includes(from)) {
       throw new UserInputError('Sender is not a participant in the chat');
     }
 
-    const savedMessage = await this.Messages.create(chatId, input);
+    const storedMessage = await this.Messages.create(chatId, input);
     
     return {
-      ...savedMessage, 
+      ...storedMessage,
       participants,
     };
   }
