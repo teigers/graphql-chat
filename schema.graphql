@@ -15,7 +15,7 @@ type Mutation {
 }
 
 type Subscription {
-  messageFeed(chatId: ID!): Message!
+  messageFeed(userId: ID!): Message!
 }
 
 type User {
@@ -36,13 +36,13 @@ type Message {
   message: String! 
 
   """ 
-    Ideally the two fields below would return the types User and Chat, but subscriptions
-    doesnt't currently support data sources without 'hacking'.
+    Ideally the two fields below would return the types User and Chat, but since subscriptions
+    doesnt't currently support data sources we'll solve it the simple way.
     
     https://github.com/apollographql/apollo-server/issues/1526
   """
   fromId: ID!
-  chat: Chat!
+  chatId: ID!
 
 }
 

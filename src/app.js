@@ -5,6 +5,9 @@ const { connectMongoDb } = require('./datasources/MongoDb');
 const Users = require('./datasources/Users');
 const Chats = require('./datasources/Chats');
 const Messages = require('./datasources/Messages');
+const UserModel = require('./models/UserModel');
+const ChatModel = require('./models/ChatModel');
+const MessageModel = require('./models/MessageModel');
 const resolvers = require('./resolvers');
 
 dotenv.config();
@@ -20,6 +23,9 @@ const server = new ApolloServer({
     Users: new Users(database),
     Chats: new Chats(database),
     Messages: new Messages(database),
+    UserModel: new UserModel(),
+    ChatModel: new ChatModel(),
+    MessageModel: new MessageModel(),
   }),
 });
 

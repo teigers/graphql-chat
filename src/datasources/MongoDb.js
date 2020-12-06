@@ -7,6 +7,9 @@ class MongoDb extends DataSource {
     this.collection = database.collection(collectionName);
   }
 
+  // XXX - YAGNI violation! Added methods the subclasses should use so
+  // one easily can add caching at a later stage.
+
   async insertOne(input, options) {
     return this.collection.insertOne(input, options);
   }

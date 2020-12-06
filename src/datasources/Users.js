@@ -10,6 +10,10 @@ module.exports = class Users extends MongoDb {
     return this.findOne({ _id: new ObjectId(userId) });
   }
 
+  async getByUserName(userName) {
+    return this.findOne({ userName });
+  }
+
   async getMany(userIds) {
       const ids = userIds.map(id => new ObjectId(id));
       const filter = {
