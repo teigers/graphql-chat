@@ -13,8 +13,8 @@ module.exports = {
     createUser: async (_, { userName },  { dataSources: { UserModel } }) => UserModel.create(userName),
     createChat: async (_, { input },  { dataSources: { ChatModel } }) => ChatModel.create(input),
     sendMessage: async (_, { chatId, input },  { dataSources: { MessageModel } }) => {
-      const { message, receivers } = await MessageModel.create(chatId, input);
-      for (const id of receivers) {
+      const message = await MessageModel.create(chatId, input);
+      for (const id of message.receivers) {
         pubSub.publish(id, { messageFeed: message });
       }
       return message;

@@ -38,14 +38,13 @@ type Message {
   message: String! 
 
   """ 
-    Ideally the two fields below would return the types User and Chat, but since subscriptions
+    Ideally the fields below would return the types User and Chat, but since subscriptions
     doesnt't currently support data sources we'll solve it the simple way.
     
     https://github.com/apollographql/apollo-server/issues/1526
   """
   fromId: ID!
   chatId: ID!
-
 }
 
 input MessageInput {
